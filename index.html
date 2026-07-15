@@ -60,7 +60,19 @@
     font-size:clamp(2.1rem, 5vw, 3.4rem);
     margin:0 0 10px;
     font-weight:600;
-    line-height:1.1;
+    line-height:1.5;
+    overflow:visible;
+  }
+  header.hero h1 .accent{
+    display:inline-block;
+    font-style:italic;
+    padding:12px 8px 16px;
+    line-height:1.5;
+    overflow:visible;
+    background:linear-gradient(90deg,var(--pink-deep),var(--blue-deep));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
   }
   header.hero p.sub{
     max-width:560px;
@@ -314,25 +326,29 @@
 
     /* Daily table becomes a stacked card list — no more sideways scrolling */
     .table-wrap{overflow-x:visible;box-shadow:none;background:transparent;border-radius:0;margin-bottom:18px;}
-    table.daily{min-width:0;width:100%;border-spacing:0 12px;border-collapse:separate;font-size:0.85rem;}
+    table.daily{display:block;width:100%;min-width:0;font-size:0.85rem;}
     table.daily thead{display:none;}
+    table.daily tbody{display:block;width:100%;}
     table.daily tr{
       display:block;background:#fff;border-radius:16px;box-shadow:var(--shadow);
-      padding:14px 16px;
+      padding:14px 16px;margin-bottom:14px;
     }
+    table.daily tr:last-child{margin-bottom:0;}
     table.daily td{
-      display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
-      padding:7px 0;border-bottom:1px dashed #f2e9ef;text-align:right;
+      display:block;width:100%;
+      padding:8px 0;border-bottom:1px dashed #f2e9ef;
+      text-align:left;line-height:1.4;
+      word-break:break-word;
     }
-    table.daily td:last-child{border-bottom:none;}
+    table.daily td:last-child{border-bottom:none;padding-bottom:0;}
     table.daily td::before{
-      content:attr(data-label);flex:0 0 38%;text-align:left;
-      font-weight:700;color:var(--plum-soft);font-size:0.74rem;
-      text-transform:uppercase;letter-spacing:.02em;
+      content:attr(data-label);display:block;
+      font-weight:700;color:var(--plum-soft);font-size:0.7rem;
+      text-transform:uppercase;letter-spacing:.03em;margin-bottom:3px;
     }
     table.daily td.nap{
-      display:block;text-align:left;border-bottom:2px solid var(--pink);
-      padding:0 0 10px;margin-bottom:6px;font-size:1rem;
+      border-bottom:2px solid var(--pink);
+      padding:0 0 10px;margin-bottom:8px;font-size:1rem;font-weight:800;
     }
     table.daily td.nap::before{content:none;}
     table.daily td:empty{display:none;}
@@ -363,7 +379,7 @@
   @media (max-width:380px){
     header.hero h1{font-size:1.5rem;}
     .week-card h2{font-size:1.15rem;}
-    table.daily td::before{flex:0 0 34%;font-size:0.68rem;}
+    table.daily td::before{font-size:0.66rem;}
   }
 
   /* loading overlay */
@@ -399,7 +415,7 @@
 
 <header class="hero">
   <span class="ribbon">🎀 Készült szeretettel</span>
-  <h1>Baba Étrend</h1>
+  <h1>Baba <span class="accent">Étrend</span></h1>
   <p class="sub">4 hetes, forgó étrendi rendszer inzulinrezisztenciára és magas vércukorra hangolva.</p>
   <div class="stitch-note">Heti 2 főzés · Rimi &amp; Maxima bevásárlólistával · szerkeszthető, PDF-be menthető</div>
 </header>
