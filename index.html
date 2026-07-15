@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baba Étrend — 4 Hetes IR-barát Rendszer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pink:#ffd7e6;
+    --pink-deep:#f9a8c9;
+    --blue:#c7e6fb;
+    --blue-deep:#9bcdf0;
+    --cream:#fffaf7;
+    --plum:#4a3f52;
+    --plum-soft:#8a7e94;
+    --lav:#efe3f7;
+    --mint:#d7f0e0;
+    --shadow: 0 8px 24px rgba(154,120,150,0.14);
+    --radius: 22px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Nunito',sans-serif;
+    color:var(--plum);
+    background:
+      radial-gradient(circle at 8% 8%, var(--pink) 0%, transparent 42%),
+      radial-gradient(circle at 95% 4%, var(--blue) 0%, transparent 38%),
+      radial-gradient(circle at 90% 95%, var(--pink) 0%, transparent 40%),
+      radial-gradient(circle at 5% 92%, var(--blue) 0%, transparent 38%),
+      var(--cream);
+    min-height:100vh;
+  }
+  h1,h2,h3,.display{font-family:'Fraunces',serif;}
+  a{color:inherit;}
+
+  /* ---------- HEADER ---------- */
+  header.hero{
+    padding:56px 24px 40px;
+    text-align:center;
+    position:relative;
+  }
+  .ribbon{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:linear-gradient(90deg,var(--pink) 0%, var(--blue) 100%);
+    padding:6px 18px;
+    border-radius:999px;
+    font-weight:700;
+    font-size:0.78rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--plum);
+    margin-bottom:18px;
+  }
+  header.hero h1{
+    font-size:clamp(2.1rem, 5vw, 3.4rem);
+    margin:0 0 10px;
+    font-weight:600;
+    line-height:1.1;
+  }
+  header.hero h1 .accent{
+    font-style:italic;
+    background:linear-gradient(90deg,var(--pink-deep),var(--blue-deep));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  header.hero p.sub{
+    max-width:560px;
+    margin:0 auto;
+    color:var(--plum-soft);
+    font-size:1.02rem;
+    line-height:1.55;
+  }
+  .stitch-note{
+    display:inline-block;
+    margin-top:22px;
+    padding:10px 20px;
+    background:#fff;
+    border-radius:14px;
+    box-shadow:var(--shadow);
+    font-size:0.9rem;
+    color:var(--plum-soft);
+    transform:rotate(-1.2deg);
+    border:1.5px dashed var(--pink-deep);
+  }
+
+  /* ---------- WEEK TABS ---------- */
+  nav.weektabs{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:10px;
+    padding:0 20px 30px;
+  }
+  nav.weektabs button{
+    font-family:'Nunito',sans-serif;
+    font-weight:700;
+    font-size:0.92rem;
+    padding:12px 22px;
+    border-radius:999px;
+    border:2px solid transparent;
+    background:#fff;
+    color:var(--plum-soft);
+    cursor:pointer;
+    box-shadow:0 3px 10px rgba(154,120,150,0.10);
+    transition:all .2s ease;
+  }
+  nav.weektabs button.active{
+    background:linear-gradient(90deg,var(--pink) 0%, var(--blue) 100%);
+    color:var(--plum);
+    border-color:#fff;
+    transform:translateY(-2px);
+  }
+  nav.weektabs button:hover{transform:translateY(-2px);}
+
+  main{max-width:980px;margin:0 auto;padding:0 20px 80px;}
+
+  section.week{display:none;}
+  section.week.active{display:block;animation:fade .35s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+  /* week header card */
+  .week-card{
+    background:#fff;
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:28px 30px;
+    margin-bottom:26px;
+    position:relative;
+    overflow:hidden;
+  }
+  .week-card::before{
+    content:"";
+    position:absolute; top:0; left:0; width:8px; height:100%;
+    background:linear-gradient(180deg,var(--pink-deep),var(--blue-deep));
+  }
+  .week-card h2{margin:0 0 6px;font-size:1.7rem;font-weight:600;}
+  .week-meta{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 4px;}
+  .pill{
+    font-size:0.8rem;font-weight:700;
+    padding:6px 14px;border-radius:999px;
+    background:var(--lav);color:var(--plum);
+  }
+  .pill.blue{background:var(--blue);}
+  .pill.pink{background:var(--pink);}
+  .pill.mint{background:var(--mint);}
+  .mealprep{margin-top:16px;line-height:1.6;color:var(--plum-soft);font-size:0.96rem;}
+  .mealprep b{color:var(--plum);}
+
+  /* daily table */
+  .table-wrap{overflow-x:auto;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:26px;background:#fff;}
+  table.daily{width:100%;border-collapse:collapse;font-size:0.88rem;min-width:640px;}
+  table.daily th{
+    background:linear-gradient(90deg,var(--pink) 0%, var(--blue) 100%);
+    color:var(--plum);padding:12px 14px;text-align:left;font-family:'Fraunces',serif;font-weight:600;font-size:0.92rem;
+  }
+  table.daily td{padding:12px 14px;border-bottom:1px solid #f2e9ef;vertical-align:top;line-height:1.4;}
+  table.daily tr:last-child td{border-bottom:none;}
+  table.daily tr:nth-child(even){background:#fffcfa;}
+  table.daily td.nap{font-weight:800;color:var(--pink-deep);white-space:nowrap;}
+  table.daily td.sun-note{color:var(--plum-soft);font-style:italic;}
+  .day-note{font-size:0.82rem;color:var(--plum-soft);margin:-10px 0 26px 4px;}
+
+  /* ---------- SHOPPING LIST ---------- */
+  .shop-card{
+    background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);
+    padding:28px 30px;margin-bottom:26px;
+  }
+  .shop-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:6px;}
+  .shop-head h3{margin:0;font-size:1.35rem;font-weight:600;}
+  .shop-actions{display:flex;gap:8px;flex-wrap:wrap;}
+  .btn{
+    font-family:'Nunito',sans-serif;font-weight:700;font-size:0.85rem;
+    border:none;border-radius:999px;padding:10px 18px;cursor:pointer;
+    display:inline-flex;align-items:center;gap:6px;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn-pdf{background:linear-gradient(90deg,var(--pink-deep),var(--blue-deep));color:#fff;box-shadow:0 4px 12px rgba(154,120,150,0.3);}
+  .btn-reset{background:#fff;color:var(--plum-soft);border:1.5px solid #eadfe6;}
+  .btn-add{background:var(--mint);color:var(--plum);}
+  .btn:hover{transform:translateY(-1px);}
+  .shop-sub{color:var(--plum-soft);font-size:0.86rem;margin:0 0 18px;}
+
+  .shop-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:22px;}
+  .shop-cat h4{
+    font-family:'Fraunces',serif;font-size:1.02rem;font-weight:600;
+    margin:0 0 10px;padding-bottom:6px;border-bottom:2px dotted var(--pink-deep);
+    display:flex;align-items:center;gap:6px;
+  }
+  ul.items{list-style:none;margin:0;padding:0;}
+  ul.items li{
+    display:flex;align-items:center;gap:10px;
+    padding:6px 4px;border-radius:10px;
+  }
+  ul.items li:hover{background:#fdf7fa;}
+  ul.items li input[type=checkbox]{
+    width:19px;height:19px;flex:0 0 19px;
+    accent-color:var(--pink-deep);cursor:pointer;
+  }
+  ul.items li .item-text{
+    flex:1;outline:none;font-size:0.93rem;line-height:1.4;
+    padding:2px 4px;border-radius:6px;
+  }
+  ul.items li .item-text:focus{background:var(--lav);}
+  ul.items li.checked .item-text{text-decoration:line-through;color:var(--plum-soft);}
+  ul.items li .del{
+    opacity:0;cursor:pointer;color:var(--pink-deep);font-weight:800;
+    font-size:1rem;flex:0 0 18px;text-align:center;transition:opacity .15s;
+  }
+  ul.items li:hover .del{opacity:1;}
+  .add-row{margin-top:10px;display:flex;gap:6px;}
+  .add-row input{
+    flex:1;font-family:'Nunito',sans-serif;font-size:0.85rem;
+    padding:7px 10px;border-radius:10px;border:1.5px solid #eadfe6;outline:none;
+  }
+  .add-row input:focus{border-color:var(--pink-deep);}
+  .add-cat-row{margin-top:18px;}
+
+  /* ---------- RECIPES ---------- */
+  .recipes-nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;justify-content:center;}
+  .recipes-nav button{
+    background:#fff;border:1.5px solid #eadfe6;color:var(--plum-soft);
+    border-radius:999px;padding:8px 16px;font-size:0.82rem;font-weight:700;
+    cursor:pointer;
+  }
+  .recipes-nav button.active{background:var(--blue);color:var(--plum);border-color:var(--blue);}
+  .recipe-group{display:none;}
+  .recipe-group.active{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;}
+  .recipe{
+    background:#fff;border-radius:18px;box-shadow:var(--shadow);
+    padding:20px 22px;
+  }
+  .recipe h4{margin:0 0 4px;font-size:1.08rem;font-weight:600;}
+  .recipe .time{font-size:0.78rem;color:var(--blue-deep);font-weight:700;margin-bottom:10px;display:block;}
+  .recipe ul.ing{margin:0 0 12px;padding-left:18px;font-size:0.87rem;line-height:1.5;color:var(--plum-soft);}
+  .recipe ol.steps{margin:0;padding-left:18px;font-size:0.87rem;line-height:1.55;}
+  .tip{
+    margin-top:12px;background:var(--pink);border-radius:12px;padding:10px 12px;
+    font-size:0.8rem;line-height:1.4;position:relative;transform:rotate(-0.6deg);
+  }
+  .tip::before{content:"💡 IR-tipp";display:block;font-weight:800;font-size:0.72rem;letter-spacing:.03em;text-transform:uppercase;margin-bottom:3px;}
+
+  /* section titles */
+  h2.section-title{
+    text-align:center;font-size:1.6rem;font-weight:600;margin:50px 0 22px;
+  }
+  h2.section-title span{color:var(--pink-deep);}
+
+  footer{
+    text-align:center;padding:40px 20px 60px;color:var(--plum-soft);font-size:0.85rem;
+  }
+
+  /* print styles - only the active shopping list prints */
+  @media print{
+    body *{visibility:hidden;}
+    #printArea, #printArea *{visibility:visible;}
+    #printArea{position:absolute;top:0;left:0;width:100%;padding:20px;}
+    .shop-actions, .del, .add-row, .add-cat-row{display:none !important;}
+    .shop-card{box-shadow:none;}
+  }
+
+  @media (max-width:600px){
+    .week-card, .shop-card{padding:20px 18px;}
+  }
+
+  /* loading overlay */
+  #loader{
+    position:fixed;inset:0;z-index:999;
+    display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,var(--pink) 0%, var(--blue) 100%);
+    transition:opacity .4s ease, visibility .4s ease;
+  }
+  #loader.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+  .loader-inner{
+    background:#fff;padding:18px 30px;border-radius:999px;
+    font-family:'Nunito',sans-serif;font-weight:700;color:var(--plum);
+    box-shadow:var(--shadow);
+  }
+
+  /* sync badge */
+  #syncBadge{
+    position:fixed;top:14px;right:14px;z-index:500;
+    font-family:'Nunito',sans-serif;font-size:0.76rem;font-weight:700;
+    padding:7px 14px;border-radius:999px;background:#fff;color:var(--plum-soft);
+    box-shadow:var(--shadow);display:flex;align-items:center;gap:6px;
+  }
+  #syncBadge.ok{color:#3f8f5f;}
+  #syncBadge.err{color:#c05a72;}
+  @media print{ #syncBadge, #loader{display:none !important;} }
+  @media (max-width:600px){ #syncBadge{ font-size:0.68rem; padding:6px 10px; top:8px; right:8px; } }
+</style>
+</head>
+<body>
+<div id="loader"><div class="loader-inner">🩷 Betöltés Firebase-ből... 🩵</div></div>
+<div id="syncBadge">☁️ Csatlakozás...</div>
+
+<header class="hero">
+  <span class="ribbon">🎀 Készült szeretettel</span>
+  <h1>Baba <span class="accent">Étrend</span></h1>
+  <p class="sub">4 hetes, forgó étrendi rendszer inzulinrezisztenciára és magas vércukorra hangolva — kizárólag azokból az alapanyagokból, amiket ő ténylegesen szeret és megeszik.</p>
+  <div class="stitch-note">Heti 2 főzés · Rimi &amp; Maxima bevásárlólistával · szerkeszthető, PDF-be menthető</div>
+</header>
+
+<nav class="weektabs" id="weekTabs"></nav>
+
+<main id="weeksContainer"></main>
+
+<div style="max-width:980px;margin:0 auto;padding:0 20px;">
+  <h2 class="section-title">IR-barát <span>alapelvek</span></h2>
+  <div class="week-card">
+    <div class="table-wrap" style="box-shadow:none;">
+      <table class="daily">
+        <thead><tr><th>Terület</th><th>Gyakorlati tanács</th></tr></thead>
+        <tbody>
+          <tr><td class="nap">Fehérje</td><td>Minden étkezésbe kerüljön (csirke, pulyka, sertés, joghurt, túró, sajt) — ez lassítja a vércukor-emelkedést.</td></tr>
+          <tr><td class="nap">Keményítő</td><td>1 adag ≈ 150–200 g főtt mennyiség, mindig hússal/zöldséggel együtt. Ha előző nap főzöd és lehűtve, másnap melegítve eszed, kedvezőbb a hatása (rezisztens keményítő).</td></tr>
+          <tr><td class="nap">Gyümölcs</td><td>1 adag/alkalom (1 közepes alma vagy 1 marék bogyós/szőlő), lehetőleg joghurttal vagy túróval együtt, ne étkezés végén nagy mennyiségben.</td></tr>
+          <tr><td class="nap">Zöldség</td><td>Szinte korlátlan — minél színesebb, annál jobb. Legyen ott minden főétkezésben.</td></tr>
+          <tr><td class="nap">Cukor, fehér liszt</td><td>Kerülendő / minimalizálandó — a receptek ezt figyelembe veszik.</td></tr>
+          <tr><td class="nap">Étkezési ritmus</td><td>Rendszeres időpontok, ne maradjon ki étkezés — ez segít elkerülni a vércukor-ingadozást.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="mealprep" style="margin-top:18px;">A brokkolit csak puhára főzve szereti — minden recept ezzel számol. Az olívaolaj, citrom/lime, só, bors és néhány száraz fűszer (kömény, pirospaprika-por, oregánó, kakukkfű) a listán kívüli, semleges kamra-alapnak számít. Ez a füzet nem helyettesíti a kezelőorvos vagy dietetikus személyre szabott tanácsát — a mennyiségeket és összetevőket érdemes velük is egyeztetni, különösen ha inzulint vagy vércukorcsökkentő gyógyszert szed.</p>
+  </div>
+</div>
+
+<div style="max-width:980px;margin:0 auto;padding:0 20px;">
+  <h2 class="section-title">Recept<span>gyűjtemény</span></h2>
+  <div class="recipes-nav" id="recipeNav"></div>
+  <div id="recipeGroups"></div>
+</div>
+
+<footer>Készült Marcell barátnőjének, 2 főzésnyi szeretettel egy hétre. 🩵🩷</footer>
+
+<script>
+/* ================= DATA ================= */
+const WEEKS = [
+{
+  id:1, title:"1. hét — Csirkés hét", proteinSrc:"Csirkemell, görög joghurt, cottage cheese", cost:"30–35 €",
+  mealPrep:"Süss meg egyszerre <b>900 g csirkemellet</b> (citromos-fűszeres), párolj 1 fej brokkolit teljesen puhára, párolj 500 g répát, főzz 800 g burgonyát héjában. Dinsztelj meg 250 g gombát hagymával. Mosd meg és vágd fel a salátaféléket. Mindezt külön dobozokban tárold — ebből áll össze a hét nagy része.",
+  shopping:{
+    "Fehérje":["1,2 kg csirkemell","500 g görög joghurt","400 g cottage cheese","150 g bacon","150 g tejföl"],
+    "Zöldség":["1 kg burgonya","500 g sárgarépa","1 fej brokkoli","250 g gomba","2 uborka","1 jégsaláta","1 kínai kel","100 g rukkola","500 g vöröshagyma","150 g száraz lencse"],
+    "Gyümölcs":["1 kg alma","300 g eper","4 narancs","30 g kókuszreszelék"],
+    "Egyéb":["50 g parmezán","1 camembert (~125 g)","1 brie (~125 g)","Olívaolaj, citrom","Só, bors, kömény, pirospaprika-por, oregánó, kakukkfű"]
+  },
+  cols:["Nap","Reggeli","Tízórai","Ebéd","Uzsonna","Vacsora"],
+  days:[
+    ["Hétfő","Görög joghurt eperrel és kókusszal","1 alma","Citromos csirkemell + puha brokkoli + burgonya","1 narancs","Rukkolás-uborkás saláta camemberttel"],
+    ["Kedd","Cottage cheese uborkával és újhagymával","—","Csirkés-gombás tál","1 alma","Gombás cottage cheese tál"],
+    ["Szerda","Tejfölös-túró tál eperrel","1 narancs","Tepsis csirke burgonyával és répával","—","Baconös tál kínai kellel*"],
+    ["Csütörtök","Meleg bacon-gombás tál","1 alma","Csirkés-lencsés saláta baconnal","1 narancs","Túrós-uborkás tál"],
+    ["Péntek","Görög joghurt eperrel és kókusszal","1 alma","Csirkés saláta joghurtos öntettel","—","Egyszerű zöldségsaláta parmezánnal"],
+    ["Szombat","Camembert gyümölccsel","—","Csirkés tál kínai kellel","1 narancs","Brie szeletek gyümölccsel"],
+    ["Vasárnap","Maradékok elfogyasztása — nincs plusz főzés, csak a hét eleji adagok","","","","Új heti meal prep (2. hét)"]
+  ],
+  note:"*Szerdai extra főzés: 200 g csirkemell + 150 g száraz lencse + kínai kel — ez adja a csütörtöki plusz fehérjét."
+},
+{
+  id:2, title:"2. hét — Pulykás hét", proteinSrc:"Pulykamell, cottage cheese, tejföl", cost:"27–32 €",
+  mealPrep:"Süss meg <b>700 g pulykamellet</b> szeletekben, párolj 1 fej brokkolit teljesen puhára, párolj 500 g répát, főzz 700 g burgonyát. Dinsztelj meg 250 g gombát hagymával. A pulykamell szárazabb húsféle, ezért érdemes egy joghurtos öntetet is készíteni mellé egy adagban, hűtőben tárolva.",
+  shopping:{
+    "Fehérje":["1 kg pulykamell","400 g cottage cheese","500 g görög joghurt","200 g tejföl","100 g bacon"],
+    "Zöldség":["1 kg burgonya","500 g sárgarépa","1 fej brokkoli","250 g gomba","500 g fejeskáposzta","1 jégsaláta","1 kínai kel","500 g vöröshagyma"],
+    "Gyümölcs":["1 kg alma","3 db őszibarack","300 g cseresznye (szezontól függően)","30 g kókuszreszelék"],
+    "Egyéb":["50 g parmezán","1 camembert (~125 g)","1 brie (~125 g)","Olívaolaj, citrom","Fűszerek (bors, pirospaprika-por, kakukkfű)"]
+  },
+  cols:["Nap","Reggeli","Tízórai","Ebéd","Uzsonna","Vacsora"],
+  days:[
+    ["Hétfő","Görög joghurt cseresznyével és kókusszal","1 alma","Citromos pulykamell + puha brokkoli + burgonya","1 őszibarack","Túrós-uborkás tál"],
+    ["Kedd","Cottage cheese uborkával és újhagymával","—","Pulykás-gombás tál","1 alma","Jégsalátás tál pulykamaradékkal"],
+    ["Szerda","Tejfölös-túró tál őszibarackkal","1 alma","Tepsis pulykamell zöldségekkel","—","Gombás cottage cheese tál*"],
+    ["Csütörtök","Meleg bacon-gombás tál","—","Pulykás tál párolt káposztával","1 őszibarack","Rukkolás saláta camemberttel"],
+    ["Péntek","Görög joghurt cseresznyével és kókusszal","1 alma","Pulykás saláta joghurtos öntettel","—","Egyszerű zöldségsaláta parmezánnal"],
+    ["Szombat","Brie gyümölccsel","—","Pulykás tál kínai kellel","1 alma","Brie szeletek gyümölccsel"],
+    ["Vasárnap","Maradékok","","","","Új heti meal prep (3. hét)"]
+  ],
+  note:"*Szerdai extra főzés: maradék gomba + friss káposzta dinsztelve, kis adag tejföllel dúsítva — két napra is elég belőle."
+},
+{
+  id:3, title:"3. hét — Halas hét", proteinSrc:"Tonhal, szardínia, garnéla, (lazac), tojás", cost:"30–37 €",
+  mealPrep:"Főzz 800 g burgonyát héjában, párolj 1 fej brokkolit teljesen puhára, főzz 500 g sárgarépát, főzz 8 tojást keményre. Vágj fel egy adag salátát (jégsaláta vagy kínai kel). A halakat nem kell előre elkészíteni — a konzerv tonhal/szardínia és a lazac/garnéla mindig frissen kerül a tányérra, csak a köret és a tojás készül előre.",
+  shopping:{
+    "Fehérje":["2 konzerv tonhal (saját levében)","2 konzerv szardínia","250 g fagyasztott garnélarák","2 szelet lazac (csak akció esetén, különben +1 konzerv tonhal)","10 tojás","500 g görög joghurt","400 g cottage cheese"],
+    "Zöldség":["1 kg burgonya","500 g sárgarépa","1 fej brokkoli","2 uborka","1 jégsaláta","1 kínai kel","150 g száraz lencse*","500 g vöröshagyma","1 csomag újhagyma"],
+    "Gyümölcs":["1 kg alma","4 narancs","300 g szőlő"],
+    "Egyéb":["Olívaolaj, citrom","Kapor, bors, só, pirospaprika-por"]
+  },
+  cols:["Nap","Reggeli","Ebéd","Uzsonna","Vacsora"],
+  days:[
+    ["Hétfő","Görög joghurt almával","Lazac + brokkoli + burgonya","Narancs","Cottage cheese uborkával"],
+    ["Kedd","2 főtt tojás","Tonhalas lencsesaláta","Görög joghurt","Jégsaláta szardíniával"],
+    ["Szerda","Cottage cheese","Fűszeres garnéla brokkolival","Alma","Görög joghurt"],
+    ["Csütörtök","Görög joghurt szőlővel","Tonhalas burgonyasaláta (görög joghurtos öntettel)","Narancs","Tojásos saláta"],
+    ["Péntek","2 tojás","Szardínia főtt burgonyával és salátával","Alma","Cottage cheese"],
+    ["Szombat","Görög joghurt","Lazac vagy tonhal salátával","Narancs","Tojás + uborka"],
+    ["Vasárnap","Maradékok","","","Új heti meal prep (4. hét)"]
+  ],
+  note:"Ezen a héten nincs szerdai extra főzési forduló — a konzervhalak miatt elég a vasárnapi köret-előkészítés, a fehérje mindig frissen kerül a tányérra. (*A lencsét az eredeti lista nem tartalmazta, de a keddi tonhalas lencsesalátához kell — ezért kis mennyiségben hozzáadva.)"
+},
+{
+  id:4, title:"4. hét — Szárnyas & hüvelyes hét", proteinSrc:"Csirkeszárny, lencse", cost:"25–30 €",
+  mealPrep:"Csavarj 600 g csirkeszárnyat bacon-csíkokba és süsd ropogósra sütőben, főzz 250 g lencsét puhára, párolj 1 fej brokkolit teljesen puhára, párolj 500 g répát, főzz 700 g burgonyát. Ez a hét könnyebb és rostban gazdagabb a lencse miatt.",
+  shopping:{
+    "Fehérje":["900 g csirkeszárny","150 g bacon","250 g száraz lencse","500 g görög joghurt","400 g cottage cheese","150 g tejföl"],
+    "Zöldség":["1 kg burgonya","500 g sárgarépa","1 fej brokkoli","250 g gomba","500 g fejeskáposzta","1 jégsaláta","1 kínai kel","500 g vöröshagyma"],
+    "Gyümölcs":["1 mangó","kis szelet görögdinnye (~500 g)","4 narancs","30 g kókuszreszelék"],
+    "Egyéb":["50 g parmezán","1 camembert (~125 g)","1 brie (~125 g)","Olívaolaj, citrom, lime","Só, bors, pirospaprika-por, kakukkfű"]
+  },
+  cols:["Nap","Reggeli","Tízórai","Ebéd","Uzsonna","Vacsora"],
+  days:[
+    ["Hétfő","Görög joghurt mangóval és kókusszal","Szelet görögdinnye","Baconba tekert csirkeszárny + puha brokkoli + burgonya","1 narancs","Rukkolás-uborkás saláta camemberttel"],
+    ["Kedd","Cottage cheese uborkával és újhagymával","—","Lencsés saláta zöldségekkel","Szelet görögdinnye","Gombás cottage cheese tál"],
+    ["Szerda","Tejfölös-túró tál mangóval","1 narancs","Csirkeszárny gombás körettel","—","Egyszerű zöldségsaláta parmezánnal*"],
+    ["Csütörtök","Meleg bacon-gombás tál","Szelet görögdinnye","Lencse-főzelék-szerű tál csirkeszárny-maradékkal","1 narancs","Jégsalátás tál csirkeszárny-maradékkal"],
+    ["Péntek","Görög joghurt mangóval és kókusszal","—","Csirkeszárny párolt káposztával és burgonyával","Szelet görögdinnye","Brie szeletek gyümölccsel"],
+    ["Szombat","Camembert gyümölccsel","1 narancs","Lencsés tál kínai kellel","—","Túrós-uborkás tál"],
+    ["Vasárnap","Maradékok","","","","Kör újraindul az 1. héttel"]
+  ],
+  note:"*Szerdai extra főzés: friss lencse tejföllel dúsítva, kis adag csirkeszárny-maradékkal — ez adja a csütörtöki plusz fehérjét."
+}
+];
+
+const RECIPES = {
+  "Reggelik":[
+    {name:"Görög joghurt gyümölccsel és kókusszal",time:"~3 perc",ing:["150 g görög joghurt","1 marék gyümölcs (eper, szőlő, cseresznye vagy mangó)","1 kk kókuszreszelék"],steps:["A joghurtot tálba szedjük.","Rárakjuk a felszeletelt gyümölcsöt.","Megszórjuk kókuszreszelékkel."],tip:"A joghurt fehérjéje lassítja a gyümölcscukor felszívódását — mindig együtt fogyasszátok."},
+    {name:"Cottage cheese uborkával és újhagymával",time:"~3 perc",ing:["150 g cottage cheese","Fél uborka, kockázva","1 szál újhagyma, apróra vágva","Só, bors"],steps:["A túrót tálba szedjük.","Ráhalmozzuk az uborkát és az újhagymát.","Fűszerezzük ízlés szerint."]},
+    {name:"Tejfölös-túró tál gyümölccsel",time:"~5 perc",ing:["100 g cottage cheese","2 ek tejföl","1 db gyümölcs (eper, őszibarack, szőlő vagy mangó), kockázva"],steps:["A túrót és tejfölt összekeverjük.","Rátesszük a felkockázott gyümölcsöt."]},
+    {name:"Meleg bacon-gombás tál",time:"~10 perc",ing:["40 g bacon","100 g gomba, szeletelve","Kevés vöröshagyma"],steps:["A bacont ropogósra sütjük serpenyőben.","Ebben a zsiradékban megpirítjuk a gombát és a hagymát pár perc alatt."]},
+    {name:"Camembert / Brie gyümölccsel",time:"~3 perc, hétvégi reggeli",ing:["50 g camembert vagy brie, szeletelve","1 marék gyümölcs (szőlő, alma vagy narancs)"],steps:["A sajtot szobahőmérsékletűre hagyjuk melegedni (kb. 10 perc).","Tányérra rendezzük a gyümölccsel."]},
+    {name:"2 főtt tojás",time:"~10 perc, előre főzhető",ing:["2 tojás","Só, bors"],steps:["8-9 percig főzzük keményre.","Előre, meal prep alkalmával is elkészíthető — 4-5 napig eláll hűtőben."]}
+  ],
+  "Csirkés ebédek":[
+    {name:"Citromos csirkemell",time:"~20 perc, meal prephez",ing:["900 g csirkemell","2 citrom leve","Fél vöröshagyma, apróra vágva","Olívaolaj, oregánó, só, bors"],steps:["A csirkemellet vékonyabbra vágjuk, bepácoljuk citromlével, hagymával, fűszerekkel.","Serpenyőben vagy sütőben (200°C, kb. 20 perc) átsütjük.","Adagokra osztva dobozoljuk."],tip:"Tálaláskor mindig párosítsd zöldséggel (puhára főzött brokkoli, saláta) és max. 150–200 g főtt burgonyával."},
+    {name:"Csirkés-gombás tál",time:"~10 perc",ing:["150 g sült csirkemell (meal prep)","100 g dinsztelt gomba","1 kk olívaolaj"],steps:["A csirkét és a gombát serpenyőben pár perc alatt átmelegítjük.","Fűszerezzük, tálaljuk."]},
+    {name:"Tepsis csirke burgonyával és répával",time:"~35 perc, meal prephez",ing:["500 g csirkemell (kockázva)","400 g burgonya kockára vágva","300 g sárgarépa","Olívaolaj, pirospaprika-por, kakukkfű"],steps:["Mindent egy tepsire teszünk, meglocsoljuk olajjal, megszórjuk fűszerekkel.","200°C-on kb. 30-35 percig sütjük, félidőben átforgatva.","Adagokra osztva tároljuk."]},
+    {name:"Csirkés-lencsés saláta baconnal",time:"~25 perc, meal prephez",ing:["150 g száraz lencse","200 g csirkemell kockára vágva","50 g bacon","Vöröshagyma, olívaolaj"],steps:["A lencsét puhára főzzük (kb. 20 perc), leszűrjük.","A bacont ropogósra sütjük, ebben a zsiradékban a csirkét is átsütjük.","Mindent összeforgatunk, hagymával, olívaolajjal ízesítjük."],tip:"A lencse alacsony glikémiás indexű, jó keményítő-helyettesítő burgonya helyett is bevethető."},
+    {name:"Csirkés saláta joghurtos öntettel",time:"~8 perc, ebéd / vacsora",ing:["120 g sült csirkemell","Jégsaláta, uborka, újhagyma","2 ek görög joghurt + citromlé az öntethez"],steps:["A zöldségeket felaprítjuk, tálba tesszük.","Ráhelyezzük a felszeletelt csirkét.","A joghurtot citromlével, sóval, borssal elkeverjük, ráöntjük."]},
+    {name:"Csirkés tál kínai kellel",time:"~8 perc",ing:["120 g sült csirkemell-maradék","Kínai kel, csíkozva","Olívaolaj, lime leve"],steps:["A kínai kelt serpenyőben pár perc alatt megdinszteljük.","Hozzáadjuk a felszeletelt csirkét, átmelegítjük.","Lime lével meglocsolva tálaljuk."]}
+  ],
+  "Pulykás ebédek":[
+    {name:"Citromos pulykamell",time:"~20 perc, meal prephez",ing:["700 g pulykamell szeletelve","2 citrom leve","Olívaolaj, kakukkfű"],steps:["A pulykamellet bepácoljuk citromlével, fűszerekkel.","Serpenyőben vagy sütőben átsütjük — figyelj, ne süsd túl szárazra."],tip:"A pulyka szárazabb húsféle — érdemes egy kanál görög joghurtos öntettel tálalni, ez segít a laktottságban is."},
+    {name:"Pulykás-gombás tál",time:"~10 perc",ing:["150 g sült pulykamell","100 g dinsztelt gomba"],steps:["Mindkettőt serpenyőben átmelegítjük, sózzuk, borsozzuk."]},
+    {name:"Tepsis pulykamell zöldségekkel",time:"~35 perc, meal prephez",ing:["500 g pulykamell kockázva","Brokkoli, répa, burgonya","Olívaolaj, pirospaprika-por"],steps:["Mindent tepsire teszünk, megszórjuk fűszerekkel.","200°C-on 30 percig sütjük, amíg a brokkoli teljesen megpuhul."]},
+    {name:"Pulykás tál párolt káposztával",time:"~20 perc",ing:["150 g sült pulykamell","250 g káposzta, csíkozva","Fél vöröshagyma"],steps:["A hagymát megdinszteljük, hozzáadjuk a káposztát, fedő alatt puhára pároljuk.","A felszeletelt pulykamellel tálaljuk."]},
+    {name:"Pulykás saláta joghurtos öntettel",time:"~8 perc, ebéd / vacsora",ing:["120 g sült pulykamell","Jégsaláta, uborka","Görög joghurtos-citromos öntet"],steps:["A zöldségeket feldaraboljuk, ráhelyezzük a pulykát.","Az öntetet rácsurgatjuk."]},
+    {name:"Pulykás tál kínai kellel",time:"~8 perc",ing:["120 g sült pulykamell-maradék","Kínai kel, csíkozva","Olívaolaj, citromlé"],steps:["A kínai kelt megdinszteljük, hozzáadjuk a pulykát.","Citromlével meglocsolva tálaljuk."]}
+  ],
+  "Halas ebédek és vacsorák":[
+    {name:"Citromos lazac brokkolival és burgonyával",time:"~20 perc",ing:["1 szelet lazac (~150 g)","1 citrom leve, kapor","150 g párolt brokkoli","150 g főtt burgonya"],steps:["A lazacot citromlével, kaporral, olívaolajjal meglocsolva sütőben 180°C-on kb. 15 percig sütjük.","Brokkolival és burgonyával tálaljuk."],tip:"Ha nincs akciós lazac, ugyanez elkészíthető 1 konzerv tonhallal is — csak a sütési lépés marad el."},
+    {name:"Tonhalas lencsesaláta",time:"~20 perc, a lencse főzésével",ing:["150 g száraz lencse","1 konzerv tonhal, lecsepegtetve","Vöröshagyma, olívaolaj, citromlé"],steps:["A lencsét puhára főzzük, leszűrjük, hűlni hagyjuk.","A tonhallal és apróra vágott hagymával összeforgatjuk.","Olívaolajjal, citromlével ízesítjük."]},
+    {name:"Fűszeres garnéla brokkolival",time:"~10 perc",ing:["150 g fagyasztott garnélarák, kiolvasztva","Fél vöröshagyma, apróra vágva","150 g párolt brokkoli","Olívaolaj, pirospaprika-por, bors"],steps:["A hagymát olívaolajon megpirítjuk.","Hozzáadjuk a garnélát, pirospaprikával megszórva 3-4 perc alatt rózsaszínre pirítjuk.","A párolt brokkolival tálaljuk."],tip:"A garnéla gyorsan kész, ezért csak közvetlenül evés előtt süsd meg — nem alkalmas előre elkészítésre."},
+    {name:"Tonhalas burgonyasaláta görög joghurtos öntettel",time:"~10 perc",ing:["1 konzerv tonhal, lecsepegtetve","200 g főtt burgonya, kockázva","2 ek görög joghurt, citromlé","Újhagyma"],steps:["A burgonyát és a tonhalat összeforgatjuk.","A joghurtot citromlével elkeverjük, ráöntjük.","Újhagymával megszórva tálaljuk."]},
+    {name:"Szardínia főtt burgonyával és salátával",time:"~8 perc",ing:["1 konzerv szardínia","150 g főtt burgonya","Jégsaláta vagy kínai kel","Citromlé, olívaolaj"],steps:["A burgonyát és a salátát tálra rendezzük.","Ráhelyezzük a szardíniát.","Citromlével és olívaolajjal meglocsoljuk."]},
+    {name:"Lazac vagy tonhal salátával",time:"~8 perc",ing:["1 szelet sült lazac-maradék vagy 1 konzerv tonhal","Jégsaláta, uborka","Olívaolaj, citromlé"],steps:["A zöldségeket feldaraboljuk, tálra tesszük.","Ráhelyezzük a halat, meglocsoljuk olívaolajjal és citromlével."]},
+    {name:"Cottage cheese uborkával",time:"~3 perc, vacsora",ing:["150 g cottage cheese","1 uborka, szeletelve"],steps:["Az uborkát felszeleteljük, mellé tálaljuk a túrót."]},
+    {name:"Jégsaláta szardíniával",time:"~5 perc, vacsora",ing:["Jégsaláta, csíkozva","1 konzerv szardínia","Citromlé, olívaolaj"],steps:["A salátát tálra tesszük.","Ráhelyezzük a szardíniát, meglocsoljuk citromlével és olívaolajjal."]},
+    {name:"Tojásos saláta",time:"~8 perc, vacsora",ing:["2 főtt tojás","Jégsaláta, uborka","Olívaolaj, citromlé"],steps:["A tojást felkarikázzuk, a zöldségre helyezzük.","Olívaolajjal és citromlével meglocsoljuk."]}
+  ],
+  "Szárnyas & hüvelyes ebédek":[
+    {name:"Baconba tekert csirkeszárny",time:"~30 perc, meal prephez",ing:["600 g csirkeszárny","100 g bacon (csíkokban)","Só, bors, pirospaprika-por"],steps:["Minden szárnyat egy csík bacon köré tekerünk, fogpiszkálóval rögzítjük.","Sütőben 200°C-on kb. 25 percig sütjük, amíg a bacon ropogós."]},
+    {name:"Lencsés saláta zöldségekkel",time:"~20 perc, meal prephez",ing:["200 g száraz lencse","1 kis vöröshagyma, sárgarépa","Olívaolaj, citromlé"],steps:["A lencsét puhára főzzük, leszűrjük, hűlni hagyjuk.","A felaprított zöldségeket hozzákeverjük.","Olívaolajjal, citromlével ízesítjük."]},
+    {name:"Csirkeszárny gombás körettel",time:"~10 perc",ing:["2-3 db sült csirkeszárny","100 g dinsztelt gomba"],steps:["A szárnyat átmelegítjük, a gombával tálaljuk."]},
+    {name:"Lencse-főzelék-szerű tál",time:"~15 perc",ing:["150 g főtt lencse","2 ek tejföl","100 g csirkeszárny-maradék (csont nélkül)"],steps:["A lencsét kevés vízzel felmelegítjük, a tejfölt belekeverjük, krémesre keverjük.","A csirkeszárny-maradékkal tálaljuk."]},
+    {name:"Csirkeszárny párolt káposztával és burgonyával",time:"~15 perc",ing:["2-3 db sült csirkeszárny","150 g párolt káposzta","150 g főtt burgonya"],steps:["Mindhármat átmelegítjük, tálaljuk."]},
+    {name:"Lencsés tál kínai kellel",time:"~8 perc",ing:["150 g főtt lencse","Kínai kel, csíkozva","Olívaolaj, lime leve"],steps:["A kínai kelt megdinszteljük, hozzáadjuk a lencsét, átmelegítjük.","Lime lével meglocsolva tálaljuk."]}
+  ],
+  "Gyors vacsorák":[
+    {name:"Rukkolás-uborkás saláta camemberttel",time:"5-10 perc",ing:["1 marék rukkola","Fél uborka, szeletelve","50 g camembert, szeletelve","Olívaolaj, citromlé"],steps:["A rukkolát és uborkát tálra rendezzük.","Ráhelyezzük a camembert-szeleteket, meglocsoljuk olívaolajjal és citromlével."]},
+    {name:"Gombás cottage cheese tál",time:"5-10 perc",ing:["100 g gomba, szeletelve","150 g cottage cheese","Kevés vöröshagyma"],steps:["A gombát hagymával olívaolajon megpirítjuk.","Langyosra hűlve a cottage cheese-zel tálaljuk."]},
+    {name:"Baconös gombás tál",time:"5-10 perc",ing:["40 g bacon","100 g gomba"],steps:["A bacont kisütjük, ebben pirítjuk meg a gombát."]},
+    {name:"Túrós-uborkás tál",time:"5-10 perc",ing:["150 g cottage cheese","1 uborka, szeletelve"],steps:["Az uborkát felszeleteljük, mellé tálaljuk a túrót."]},
+    {name:"Egyszerű zöldségsaláta parmezánnal",time:"5-10 perc",ing:["Vegyes zöldségek (ami otthon van: jégsaláta, uborka, kínai kel)","20 g parmezán forgács","Olívaolaj, citromlé"],steps:["Mindent felaprítunk, összeforgatunk.","Olívaolajjal, citromlével ízesítjük, parmezánt szórunk rá."]},
+    {name:"Brie szeletek gyümölccsel",time:"5-10 perc",ing:["50 g brie, szeletelve","1 marék gyümölcs (szőlő, alma vagy mangó)"],steps:["A brie-t tányérra rendezzük a gyümölccsel.","Szobahőmérsékleten a legfinomabb, érdemes 10 perccel előbb kivenni a hűtőből."]},
+    {name:"Jégsalátás tál hús-maradékkal",time:"5-10 perc",ing:["Jégsaláta, csíkozva","100 g hús-maradék (csirke, pulyka, sertés vagy csirkeszárny)","Görög joghurtos-citromos öntet"],steps:["A salátát tálra tesszük, ráhelyezzük a felszeletelt húst.","A joghurtot citromlével, sóval elkeverjük, ráöntjük."]}
+  ]
+};
+
+/* ================= STATE (Firebase Realtime Database + local fallback) ================= */
+const DB_URL = "https://dietplan-ab4ef-default-rtdb.europe-west1.firebasedatabase.app";
+const DB_PATH = "babaetrend/shopping";
+const STORAGE_KEY = "babaetrend_shopping_v1";
+const badge = document.getElementById("syncBadge");
+
+function setBadge(text, cls){
+  badge.textContent = text;
+  badge.className = cls || "";
+}
+
+function loadLocal(){
+  try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }catch(e){ return {}; }
+}
+function saveLocal(s){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); }catch(e){}
+}
+
+async function fetchRemote(){
+  const res = await fetch(`${DB_URL}/${DB_PATH}.json`);
+  if(!res.ok) throw new Error("HTTP " + res.status);
+  const data = await res.json();
+  return data || {};
+}
+
+async function pushRemote(s){
+  const res = await fetch(`${DB_URL}/${DB_PATH}.json`, {
+    method:"PUT",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify(s)
+  });
+  if(!res.ok) throw new Error("HTTP " + res.status);
+}
+
+let firebaseOk = true;
+let isEditing = false;
+let saveTimer = null;
+
+function persist(){
+  saveLocal(state);
+  if(saveTimer) clearTimeout(saveTimer);
+  setBadge("☁️ Mentés...", "");
+  saveTimer = setTimeout(async ()=>{
+    try{
+      await pushRemote(state);
+      firebaseOk = true;
+      setBadge("☁️ Szinkronban ✓", "ok");
+    }catch(e){
+      firebaseOk = false;
+      setBadge("⚠️ Csak helyi mentés", "err");
+    }
+  }, 600);
+}
+
+let state = {};
+
+function ensureWeekState(weekId){
+  if(!state[weekId]){
+    const w = WEEKS.find(w=>w.id===weekId);
+    const cats = {};
+    Object.keys(w.shopping).forEach(cat=>{
+      cats[cat] = w.shopping[cat].map(text=>({text, checked:false}));
+    });
+    state[weekId] = cats;
+  }
+  return state[weekId];
+}
+
+/* poll Firebase every 15s so two phones stay in sync while shopping together */
+function startPolling(){
+  setInterval(async ()=>{
+    if(isEditing) return;
+    try{
+      const remote = await fetchRemote();
+      if(JSON.stringify(remote) !== JSON.stringify(state) && Object.keys(remote).length){
+        state = remote;
+        saveLocal(state);
+        renderShoppingList(activeWeek);
+      }
+      firebaseOk = true;
+      setBadge("☁️ Szinkronban ✓", "ok");
+    }catch(e){
+      firebaseOk = false;
+      setBadge("⚠️ Csak helyi mentés", "err");
+    }
+  }, 15000);
+}
+
+/* ================= RENDER: TABS ================= */
+const weekTabs = document.getElementById("weekTabs");
+const weeksContainer = document.getElementById("weeksContainer");
+let activeWeek = 1;
+
+WEEKS.forEach(w=>{
+  const btn = document.createElement("button");
+  btn.textContent = w.title.split("—")[0].trim();
+  btn.dataset.week = w.id;
+  btn.addEventListener("click", ()=>setActiveWeek(w.id));
+  weekTabs.appendChild(btn);
+});
+
+function setActiveWeek(id){
+  activeWeek = id;
+  [...weekTabs.children].forEach(b=> b.classList.toggle("active", Number(b.dataset.week)===id));
+  [...weeksContainer.children].forEach(s=> s.classList.toggle("active", Number(s.dataset.week)===id));
+}
+
+/* ================= RENDER: WEEK SECTIONS ================= */
+WEEKS.forEach(w=>{
+  const section = document.createElement("section");
+  section.className = "week";
+  section.dataset.week = w.id;
+
+  // week card
+  const card = document.createElement("div");
+  card.className = "week-card";
+  card.innerHTML = `
+    <h2>${w.title}</h2>
+    <div class="week-meta">
+      <span class="pill pink">🍽️ ${w.proteinSrc}</span>
+      <span class="pill blue">💶 ${w.cost} / hét</span>
+      <span class="pill mint">📦 Heti 2 főzés</span>
+    </div>
+    <p class="mealprep"><b>Vasárnapi meal prep:</b> ${w.mealPrep}</p>
+  `;
+  section.appendChild(card);
+
+  // daily table
+  const tw = document.createElement("div");
+  tw.className = "table-wrap";
+  const table = document.createElement("table");
+  table.className = "daily";
+  const thead = document.createElement("thead");
+  thead.innerHTML = "<tr>" + w.cols.map(c=>`<th>${c}</th>`).join("") + "</tr>";
+  table.appendChild(thead);
+  const tbody = document.createElement("tbody");
+  w.days.forEach(row=>{
+    const tr = document.createElement("tr");
+    tr.innerHTML = row.map((cell,i)=> i===0 ? `<td class="nap">${cell}</td>` : `<td${cell.includes("Új heti")||cell.includes("Kör újraindul")||cell.includes("Maradékok")?' class="sun-note"':''}>${cell}</td>`).join("");
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  tw.appendChild(table);
+  section.appendChild(tw);
+
+  if(w.note){
+    const note = document.createElement("p");
+    note.className = "day-note";
+    note.textContent = w.note;
+    section.appendChild(note);
+  }
+
+  // shopping list card
+  const shopCard = document.createElement("div");
+  shopCard.className = "shop-card";
+  shopCard.id = `shop-${w.id}`;
+  shopCard.innerHTML = `
+    <div id="printArea-${w.id}">
+    <div class="shop-head">
+      <h3>🛒 ${w.title.split("—")[0].trim()} bevásárlólista</h3>
+      <div class="shop-actions">
+        <button class="btn btn-pdf" data-action="pdf" data-week="${w.id}">⬇ PDF mentés</button>
+        <button class="btn btn-reset" data-action="reset" data-week="${w.id}">↺ Alaphelyzet</button>
+      </div>
+    </div>
+    <p class="shop-sub">Pipáld ki, amit már megvettél, kattints a szövegre a szerkesztéshez, vagy adj hozzá saját tételt.</p>
+    <div class="shop-grid" id="shopGrid-${w.id}"></div>
+    </div>
+  `;
+  section.appendChild(shopCard);
+
+  weeksContainer.appendChild(section);
+});
+
+async function init(){
+  setBadge("☁️ Csatlakozás...", "");
+  let remote = null;
+  try{
+    remote = await fetchRemote();
+  }catch(e){
+    remote = null;
+  }
+
+  if(remote && Object.keys(remote).length){
+    state = remote;
+    firebaseOk = true;
+  }else{
+    // no remote data yet (or fetch failed) - start from local cache, then build defaults
+    state = loadLocal();
+    firebaseOk = (remote !== null);
+  }
+
+  WEEKS.forEach(w=> ensureWeekState(w.id));
+  WEEKS.forEach(w=> renderShoppingList(w.id));
+  setActiveWeek(1);
+
+  saveLocal(state);
+  if(firebaseOk){
+    try{
+      await pushRemote(state);
+      setBadge("☁️ Szinkronban ✓", "ok");
+    }catch(e){
+      setBadge("⚠️ Csak helyi mentés", "err");
+    }
+  }else{
+    setBadge("⚠️ Csak helyi mentés", "err");
+  }
+
+  document.getElementById("loader").classList.add("hidden");
+  startPolling();
+}
+
+init();
+
+/* ================= SHOPPING LIST LOGIC ================= */
+function renderShoppingList(weekId){
+  const wState = ensureWeekState(weekId);
+  const grid = document.getElementById(`shopGrid-${weekId}`);
+  grid.innerHTML = "";
+
+  const catIcons = {"Fehérje":"🥚","Zöldség":"🥦","Gyümölcs":"🍓","Egyéb":"🧂"};
+
+  Object.keys(wState).forEach(cat=>{
+    const catDiv = document.createElement("div");
+    catDiv.className = "shop-cat";
+    const h4 = document.createElement("h4");
+    h4.textContent = (catIcons[cat]||"•") + " " + cat;
+    catDiv.appendChild(h4);
+
+    const ul = document.createElement("ul");
+    ul.className = "items";
+
+    wState[cat].forEach((item, idx)=>{
+      const li = document.createElement("li");
+      if(item.checked) li.classList.add("checked");
+
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = item.checked;
+      cb.addEventListener("change", ()=>{
+        item.checked = cb.checked;
+        li.classList.toggle("checked", cb.checked);
+        persist();
+      });
+
+      const span = document.createElement("span");
+      span.className = "item-text";
+      span.contentEditable = "true";
+      span.textContent = item.text;
+      span.addEventListener("focus", ()=>{ isEditing = true; });
+      span.addEventListener("blur", ()=>{
+        isEditing = false;
+        item.text = span.textContent.trim() || item.text;
+        span.textContent = item.text;
+        persist();
+      });
+      span.addEventListener("keydown", (e)=>{
+        if(e.key === "Enter"){ e.preventDefault(); span.blur(); }
+      });
+
+      const del = document.createElement("span");
+      del.className = "del";
+      del.textContent = "✕";
+      del.title = "Törlés";
+      del.addEventListener("click", ()=>{
+        wState[cat].splice(idx,1);
+        persist();
+        renderShoppingList(weekId);
+      });
+
+      li.appendChild(cb);
+      li.appendChild(span);
+      li.appendChild(del);
+      ul.appendChild(li);
+    });
+
+    catDiv.appendChild(ul);
+
+    const addRow = document.createElement("div");
+    addRow.className = "add-row";
+    const input = document.createElement("input");
+    input.type = "text";
+    input.placeholder = "+ új tétel...";
+    input.addEventListener("focus", ()=>{ isEditing = true; });
+    input.addEventListener("blur", ()=>{ isEditing = false; });
+    input.addEventListener("keydown",(e)=>{
+      if(e.key === "Enter" && input.value.trim()){
+        wState[cat].push({text:input.value.trim(), checked:false});
+        persist();
+        renderShoppingList(weekId);
+      }
+    });
+    addRow.appendChild(input);
+    catDiv.appendChild(addRow);
+
+    grid.appendChild(catDiv);
+  });
+}
+
+/* PDF / reset actions */
+document.addEventListener("click",(e)=>{
+  const btn = e.target.closest("button[data-action]");
+  if(!btn) return;
+  const weekId = Number(btn.dataset.week);
+  if(btn.dataset.action === "pdf"){
+    printWeek(weekId);
+  } else if(btn.dataset.action === "reset"){
+    if(confirm("Biztosan visszaállítod ennek a hétnek a bevásárlólistáját az eredeti állapotra? A saját tételeid és pipáid elvesznek.")){
+      delete state[weekId];
+      ensureWeekState(weekId);
+      persist();
+      renderShoppingList(weekId);
+    }
+  }
+});
+
+function printWeek(weekId){
+  // temporarily mark which printArea should show
+  document.querySelectorAll('[id^="printArea-"]').forEach(el=>{
+    el.id === `printArea-${weekId}` ? el.setAttribute('id','printArea') : null;
+  });
+  window.print();
+  // restore ids after print dialog closes
+  setTimeout(()=>{
+    document.querySelectorAll('#printArea').forEach(el=>{
+      el.id = `printArea-${weekId}`;
+    });
+  }, 500);
+}
+
+/* ================= RECIPES RENDER ================= */
+const recipeNav = document.getElementById("recipeNav");
+const recipeGroups = document.getElementById("recipeGroups");
+const catKeys = Object.keys(RECIPES);
+
+catKeys.forEach((cat, i)=>{
+  const btn = document.createElement("button");
+  btn.textContent = cat;
+  if(i===0) btn.classList.add("active");
+  btn.addEventListener("click", ()=>{
+    [...recipeNav.children].forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    [...recipeGroups.children].forEach(g=>g.classList.toggle("active", g.dataset.cat===cat));
+  });
+  recipeNav.appendChild(btn);
+
+  const group = document.createElement("div");
+  group.className = "recipe-group" + (i===0 ? " active" : "");
+  group.dataset.cat = cat;
+
+  RECIPES[cat].forEach(r=>{
+    const card = document.createElement("div");
+    card.className = "recipe";
+    card.innerHTML = `
+      <h4>${r.name}</h4>
+      <span class="time">⏱ ${r.time}</span>
+      <ul class="ing">${r.ing.map(i=>`<li>${i}</li>`).join("")}</ul>
+      <ol class="steps">${r.steps.map(s=>`<li>${s}</li>`).join("")}</ol>
+      ${r.tip ? `<div class="tip">${r.tip}</div>` : ""}
+    `;
+    group.appendChild(card);
+  });
+
+  recipeGroups.appendChild(group);
+});
+</script>
+</body>
+</html>
