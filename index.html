@@ -818,8 +818,10 @@ function renderShoppingList(weekId){
   grid.innerHTML = "";
 
   const catIcons = {"Fehérje":"🥚","Zöldség":"🥦","Gyümölcs":"🍓","Egyéb":"🧂"};
+  const CAT_ORDER = ["Fehérje","Zöldség","Gyümölcs","Egyéb"];
+  const orderedCats = CAT_ORDER.filter(c=>wState[c]).concat(Object.keys(wState).filter(c=>!CAT_ORDER.includes(c)));
 
-  Object.keys(wState).forEach(cat=>{
+  orderedCats.forEach(cat=>{
     const catDiv = document.createElement("div");
     catDiv.className = "shop-cat";
     const h4 = document.createElement("h4");
